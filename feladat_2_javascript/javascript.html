@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript CRUD - Védett állatok</title>
+    <link rel="stylesheet" href="../style.css"> <style>
+        /* Egyedi kiegészítő stílusok a CRUD-hoz */
+        .form-container { background: whitesmoke; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #888; }
+        input { padding: 8px; margin: 5px; border-radius: 4px; border: 1px solid #ccc; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #a68f8f; color: white; }
+        .action-btns button { cursor: pointer; margin-right: 5px; padding: 5px 10px; border-radius: 3px; border: none; }
+        .edit-btn { background-color: #3498db; color: white; }
+        .delete-btn { background-color: #e74c3c; color: white; }
+        .add-btn { background-color: #27ae60; color: white; padding: 10px 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>JavaScript CRUD Alkalmazás</h1>
+    </header>
+
+    <main>
+        <p><a href="../index.html" style="color: #333; font-weight: bold;">← Vissza a főoldalra</a></p>
+
+        <div class="form-container">
+            <h3>Új állat hozzáadása / Módosítás</h3>
+            <input type="hidden" id="editIndex" value="-1">
+            <input type="text" id="allatNev" placeholder="Állat neve">
+            <input type="number" id="allatEv" placeholder="Védetté válás éve">
+            <input type="number" id="allatErtek" placeholder="Eszmei érték (Ft)">
+            <button class="add-btn" onclick="saveData()">Mentés</button>
+        </div>
+
+        <table id="crudTable">
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Év</th>
+                    <th>Érték</th>
+                    <th>Műveletek</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>Készítette: Molnár Emese & Verebély Annamária</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
