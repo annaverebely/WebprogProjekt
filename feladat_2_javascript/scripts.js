@@ -1,7 +1,7 @@
 // Kezdő adatok 
 let vedettAllatok = [
-    { nev: "Vadrózsa", ev: 1982, ertek: 10000 },
-    { nev: "Hóvirág", ev: 2005, ertek: 10000 }
+    { nev: "magyar tarsza", ev: 1982, ertek: 10000 },
+    { nev: "ritka hegyiszitakoto", ev: 2005, ertek: 10000 }
 ];
 
 // Táblázat kirajzolása
