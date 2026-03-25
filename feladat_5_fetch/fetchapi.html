@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch API CRUD - Védett állatok</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header><h1>Fetch API Adatbázis Kezelő</h1></header>
+    <main>
+        <p><a href="../index.html" style="font-weight: bold;">← Vissza a főoldalra</a></p>
+
+        <section class="form-container" style="background: whitesmoke; padding: 15px; border-radius: 8px; border: 1px solid #888; margin-bottom: 20px;">
+            <h3>Új állat rögzítése az adatbázisba</h3>
+            <input type="text" id="nev" placeholder="Állat neve">
+            <input type="number" id="ev" placeholder="Védetté válás éve">
+            
+            <select id="kategoria">
+                <option value="1">Halak</option>
+                <option value="3">Madarak</option>
+                <option value="7">Emlősök</option>
+                <option value="8">Ízeltlábúak</option>
+            </select>
+
+            <select id="ertek">
+                <option value="1">100.000 Ft</option>
+                <option value="2">250.000 Ft</option>
+                <option value="3">500.000 Ft</option>
+                <option value="4">1.000.000 Ft</option>
+            </select>
+
+            <button onclick="addAllat()" style="background-color: #27ae60; color: white; padding: 10px; cursor: pointer;">Küldés a szerverre</button>
+        </section>
+
+        <table style="width: 100%; border-collapse: collapse; background: white;">
+            <thead>
+                <tr style="background-color: #a68f8f; color: white;">
+                    <th>Név</th>
+                    <th>Év</th>
+                    <th>Kategória</th>
+                    <th>Eszmei érték</th>
+                    <th>Művelet</th>
+                </tr>
+            </thead>
+            <tbody id="fetchTableBody">
+                </tbody>
+        </table>
+    </main>
+    <script src="fetchapi.js"></script>
+</body>
+</html>
