@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Védett állatok kezelése</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script type="module" crossorigin src="./assets/index-Bbeh0o3J.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-NjI5K8Ux.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+      /* 1. ALAPOK: Tiszta fehér háttér a tartalomnak, szürke az oldalnak */
+      body {
+          background-color: #f8f9fa !important; /* Világosszürke háttér, mint a képen */
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          margin: 0;
+          padding: 0;
+      }
+
+      h3 {
+          color: #5d6771;
+          font-weight: 400;
+          margin-bottom: 30px;
+          margin-top: 40px;
+      }
+
+      .container {
+          max-width: 1000px !important;
+          background-color: transparent !important; 
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+      }
+
+      #root .card, .table-responsive {
+          background-color: #ffffff !important;
+          border-radius: 8px !important;
+          border: 1px solid #edf2f7 !important;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
+          padding: 25px !important;
+          margin-bottom: 25px !important;
+          width: 100% !important;
+          max-width: none !important;
+      }
+
+      .form-label {
+          color: #8898aa;
+          font-size: 0.85rem;
+          margin-bottom: 8px;
+      }
+
+      .form-control {
+          border: 1px solid #dee2e6 !important;
+          padding: 10px 15px !important;
+          color: #495057 !important;
+          border-radius: 6px !important;
+      }
+
+      .form-control::placeholder {
+          color: #adb5bd;
+      }
+
+      .btn-primary {
+          background-color: #8e7e7e !important; /* Pontos barna árnyalat a képről */
+          border: 1px solid #7d6e6e !important;
+          color: white !important;
+          padding: 10px 25px !important;
+          border-radius: 6px !important;
+          font-weight: 500 !important;
+          transition: all 0.2s;
+          white-space: nowrap !important;
+      }
+
+      .btn-primary:hover {
+          background-color: #7d6e6e !important;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .table-dark {
+          background-color: #212529 !important; /* Fekete fejléc, mint a képen */
+          color: #ffffff !important;
+          border: none !important;
+      }
+
+      .table thead th {
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          padding: 12px 15px !important;
+      }
+
+      .text-center.p-5 {
+          color: #8898aa;
+          font-size: 0.95rem;
+      }
+
+      .btn-outline-secondary {
+          border-color: #adb5bd !important;
+          color: #6c757d !important;
+          background-color: #ffffff !important;
+          padding: 8px 20px !important;
+          font-size: 0.9rem !important;
+      }
+
+      /* Üzenetek elrejtése */
+      .alert-info { display: none !important; }
+
+      #root {
+          padding-top: 20px;
+          padding-bottom: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="root"></div>
+    </div>
+  </body>
+</html>
