@@ -1,47 +1,102 @@
 <?php
 header("Content-Type: application/json");
-require "db.php";
-$method = $_SERVER['REQUEST_METHOD'];
-$tabla = "allat"; // Az adatbázisodban szereplő táblanév
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
 
-switch ($method) {
-    case 'GET':  
-        try {
-            $stmt = $pdo->query("SELECT * FROM $tabla ORDER BY id DESC");
-            $readData = $stmt->fetchAll();
-            echo json_encode(['status' => 'Sikeres olvasás!', "readData" => $readData]);
-        } catch(PDOException $e) {
-            echo json_encode(['status' => 'Hiba az olvasáskor!']);
-        }
-        break;
-    case 'POST':
-        try {
-            $data = json_decode(file_get_contents("php://input"), true);
-            $stmt = $pdo->prepare("INSERT INTO $tabla (nev, ertekid, ev, katid) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$data['nev'], $data['ertekid'], $data['ev'], $data['katid']]);
-            echo json_encode(['status' => 'Sikeres rögzítés!']);
-        } catch(PDOException $e) {
-            echo json_encode(['status' => 'Hiba a rögzítéskor!']);
-        }
-        break;
-    case 'PUT':
-        try {
-            $data = json_decode(file_get_contents("php://input"), true);
-            $stmt = $pdo->prepare("UPDATE $tabla SET nev=?, ertekid=?, ev=?, katid=? WHERE id=?");
-            $stmt->execute([$data['nev'], $data['ertekid'], $data['ev'], $data['katid'], $data['id']]);
-            echo json_encode(['status' => 'Sikeres frissítés!']);
-        } catch(PDOException $e) {
-            echo json_encode(['status' => 'Hiba a frissítéskor!']);
-        }
-        break;
-    case 'DELETE':
-        try {
-            $data = json_decode(file_get_contents("php://input"), true);
-            $stmt = $pdo->prepare("DELETE FROM $tabla WHERE id=?");
-            $stmt->execute([$data['id']]);
-            echo json_encode(['status' => 'Sikeres törlés!']);
-        } catch(PDOException $e) {
-            echo json_encode(['status' => 'Hiba a törléskor!']);
-        }
-        break;
+require 'db.php';
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+// 1. Ellenőrzi, hogy létezik-e az Érték ID az 'ertek' táblában
+function isErtekIdValid($pdo, $ertekid) {
+    $stmt = $pdo->prepare("SELECT id FROM ertek WHERE id = ?");
+    $stmt->execute([$ertekid]);
+    return $stmt->rowCount() > 0;
 }
+
+// 2. ÚJ: Ellenőrzi, hogy létezik-e a Kategória ID a 'kategoria' táblában
+function isKatIdValid($pdo, $katid) {
+    // FIGYELEM: Ha az adatbázisodban nem 'kategoria' a tábla neve, írd át itt!
+    $stmt = $pdo->prepare("SELECT id FROM kategoria WHERE id = ?");
+    $stmt->execute([$katid]);
+    return $stmt->rowCount() > 0;
+}
+
+// A hibaüzenetek
+$hibaUzenetErtek = "Ilyen Érték ID nincs! Ellenőrizze itt: http://webfeladat.nhely.hu/fetchapi.html";
+$hibaUzenetKat = "Ilyen Kategória ID nincs! Ellenőrizze itt: http://webfeladat.nhely.hu/javascript.html";
+
+if ($method === 'GET') {
+    $stmt = $pdo->query("SELECT * FROM allat");
+    $allatok = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    echo json_encode([
+        'readData' => $allatok,
+        'status' => 'Adatok betöltve'
+    ]);
+
+} elseif ($method === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    
+    // Ellenőrzés: Érték ID
+    if (!isErtekIdValid($pdo, $data['ertekid'])) {
+        http_response_code(422);
+        echo json_encode(['error' => $hibaUzenetErtek]);
+        exit;
+    }
+
+    // Ellenőrzés: Kategória ID
+    if (!isKatIdValid($pdo, $data['katid'])) {
+        http_response_code(422);
+        echo json_encode(['error' => $hibaUzenetKat]);
+        exit;
+    }
+
+    $stmt = $pdo->prepare("INSERT INTO allat (nev, ertekid, ev, katid) VALUES (:nev, :ertekid, :ev, :katid)");
+    $stmt->execute([
+        ':nev' => $data['nev'],
+        ':ertekid' => $data['ertekid'],
+        ':ev' => $data['ev'],
+        ':katid' => $data['katid']
+    ]);
+    
+    echo json_encode(['status' => 'Állat sikeresen hozzáadva']);
+
+} elseif ($method === 'PUT') {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    // Ellenőrzés: Érték ID
+    if (!isErtekIdValid($pdo, $data['ertekid'])) {
+        http_response_code(422);
+        echo json_encode(['error' => $hibaUzenetErtek]);
+        exit;
+    }
+
+    // Ellenőrzés: Kategória ID
+    if (!isKatIdValid($pdo, $data['katid'])) {
+        http_response_code(422);
+        echo json_encode(['error' => $hibaUzenetKat]);
+        exit;
+    }
+
+    $stmt = $pdo->prepare("UPDATE allat SET nev = :nev, ertekid = :ertekid, ev = :ev, katid = :katid WHERE id = :id");
+    $stmt->execute([
+        ':id' => $data['id'],
+        ':nev' => $data['nev'],
+        ':ertekid' => $data['ertekid'],
+        ':ev' => $data['ev'],
+        ':katid' => $data['katid']
+    ]);
+    
+    echo json_encode(['status' => 'Állat sikeresen frissítve']);
+
+} elseif ($method === 'DELETE') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    
+    $stmt = $pdo->prepare("DELETE FROM allat WHERE id = :id");
+    $stmt->execute([':id' => $data['id']]);
+    
+    echo json_encode(['status' => 'Állat sikeresen törölve']);
+}
+?>
