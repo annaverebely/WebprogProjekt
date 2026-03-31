@@ -5,12 +5,12 @@ require_once "db.php";
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch($method) {
-    case 'GET': // READ
+    case 'GET': 
         $stmt = $pdo->query("SELECT * FROM ertek ORDER BY id DESC");
         echo json_encode($stmt->fetchAll());
         break;
 
-    case 'POST': // CREATE
+    case 'POST': 
         $data = json_decode(file_get_contents("php://input"), true);
         if(!empty($data['forint'])) {
             $stmt = $pdo->prepare("INSERT INTO ertek (forint) VALUES (?)");
@@ -19,7 +19,7 @@ switch($method) {
         }
         break;
 
-    case 'PUT': // UPDATE 
+    case 'PUT': 
         $data = json_decode(file_get_contents("php://input"), true);
         if(!empty($data['id']) && !empty($data['forint'])) {
             $stmt = $pdo->prepare("UPDATE ertek SET forint = ? WHERE id = ?");
@@ -28,7 +28,7 @@ switch($method) {
         }
         break;
 
-    case 'DELETE': // DELETE
+    case 'DELETE': 
         if(isset($_GET['id'])) {
             $stmt = $pdo->prepare("DELETE FROM ertek WHERE id = ?");
             $stmt->execute([$_GET['id']]);

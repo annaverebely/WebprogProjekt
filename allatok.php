@@ -8,14 +8,12 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// 1. ADATBÁZIS KAPCSOLÓDÁS 
 $host = "localhost"; 
 $dbname = "webfeladat"; 
 $user = "webfeladat";    
 $pass = "NeumannGamf+1";           
 
 try {
-    // Kapcsolódás PDO-val a 
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
@@ -23,13 +21,10 @@ try {
     exit;
 }
 
-// 2. KÉRÉS TÍPUSÁNAK MEGÁLLAPÍTÁSA
 $method = $_SERVER['REQUEST_METHOD'];
 
-// --- GET: Adatok lekérése (READ) ---
 if ($method == 'GET') {
     try {
-        // Összekapcsoljuk az állatokat a kategóriával és az értékkel 
         $sql = "SELECT a.id, a.nev, a.ev, k.nev AS kategoria, e.forint AS ertek 
                 FROM allat a 
                 LEFT JOIN kategoria k ON a.katid = k.id 
@@ -43,7 +38,6 @@ if ($method == 'GET') {
     }
 }
 
-// --- POST: Új adat mentése (CREATE) ---
 if ($method == 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     
@@ -66,7 +60,6 @@ if ($method == 'POST') {
     }
 }
 
-// --- DELETE: Adat törlése (DELETE) ---
 if ($method == 'DELETE') {
     if (isset($_GET['id'])) {
         try {

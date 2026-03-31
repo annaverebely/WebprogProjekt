@@ -1,6 +1,5 @@
 const apiURL = 'ertek_api.php';
 
-// READ 
 async function loadErtekek() {
     const res = await fetch(apiURL);
     const data = await res.json();
@@ -21,7 +20,6 @@ async function loadErtekek() {
     });
 }
 
-// CREATE / UPDATE mentés
 async function saveErtek() {
     const id = document.getElementById('ertekId').value;
     const forint = document.getElementById('forintErtek').value;
@@ -53,7 +51,6 @@ function resetForm() {
     document.getElementById('submitBtn').innerText = "Mentés";
 }
 
-//Delete
 async function deleteErtek(id) {
     if(!confirm("Biztosan törlöd?")) return;
     await fetch(`${apiURL}?id=${id}`, { method: 'DELETE' });

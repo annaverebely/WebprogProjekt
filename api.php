@@ -8,22 +8,18 @@ require 'db.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// 1. Ellenőrzi, hogy létezik-e az Érték ID az 'ertek' táblában
 function isErtekIdValid($pdo, $ertekid) {
     $stmt = $pdo->prepare("SELECT id FROM ertek WHERE id = ?");
     $stmt->execute([$ertekid]);
     return $stmt->rowCount() > 0;
 }
 
-// 2. ÚJ: Ellenőrzi, hogy létezik-e a Kategória ID a 'kategoria' táblában
 function isKatIdValid($pdo, $katid) {
-    // FIGYELEM: Ha az adatbázisodban nem 'kategoria' a tábla neve, írd át itt!
     $stmt = $pdo->prepare("SELECT id FROM kategoria WHERE id = ?");
     $stmt->execute([$katid]);
     return $stmt->rowCount() > 0;
 }
 
-// A hibaüzenetek
 $hibaUzenetErtek = "Ilyen Érték ID nincs! Ellenőrizze itt: http://webfeladat.nhely.hu/fetchapi.html";
 $hibaUzenetKat = "Ilyen Kategória ID nincs! Ellenőrizze itt: http://webfeladat.nhely.hu/javascript.html";
 
@@ -39,14 +35,12 @@ if ($method === 'GET') {
 } elseif ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
     
-    // Ellenőrzés: Érték ID
     if (!isErtekIdValid($pdo, $data['ertekid'])) {
         http_response_code(422);
         echo json_encode(['error' => $hibaUzenetErtek]);
         exit;
     }
 
-    // Ellenőrzés: Kategória ID
     if (!isKatIdValid($pdo, $data['katid'])) {
         http_response_code(422);
         echo json_encode(['error' => $hibaUzenetKat]);
@@ -66,14 +60,12 @@ if ($method === 'GET') {
 } elseif ($method === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);
 
-    // Ellenőrzés: Érték ID
     if (!isErtekIdValid($pdo, $data['ertekid'])) {
         http_response_code(422);
         echo json_encode(['error' => $hibaUzenetErtek]);
         exit;
     }
 
-    // Ellenőrzés: Kategória ID
     if (!isKatIdValid($pdo, $data['katid'])) {
         http_response_code(422);
         echo json_encode(['error' => $hibaUzenetKat]);

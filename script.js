@@ -1,4 +1,5 @@
-let kategoriak = [
+var selectedIndex = null;
+var kategoriak = [
     { id: 1, nev: "halak" },
     { id: 2, nev: "körszájúak" },
     { id: 3, nev: "madarak" },
@@ -9,76 +10,83 @@ let kategoriak = [
     { id: 8, nev: "ízeltlábúak" }
 ];
 
-let editIndex = -1;
+document.addEventListener("DOMContentLoaded", function() {
+    printArray();
+});
 
-document.addEventListener("DOMContentLoaded", renderTable);
-
-function renderTable() {
-    const tbody = document.getElementById('kategoriaTableBody');
-    tbody.innerHTML = '';
-
-    kategoriak.forEach((kat, index) => {
-        const row = `
-            <tr>
-                <td class="fw-bold">${kat.id}</td>
-                <td>${kat.nev}</td>
-                <td class="text-center">
-                    <button class="btn btn-sm me-2 shadow-sm" style="background-color: #8e7e7e; color: white;" onclick="prepareEdit(${index})">Szerkesztés</button>
-                    <button class="btn btn-sm shadow-sm" style="background-color: #a54242; color: white;" onclick="deleteKategoria(${index})">Törlés</button>
-                </td>
-            </tr>
-        `;
-        tbody.innerHTML += row;
-    });
+function printArray() {
+    var tableBody = document.getElementById("kategoriaTableBody");
+    tableBody.innerHTML = "";
+    
+    for (var i = 0; i < kategoriak.length; i++) {
+        var row = tableBody.insertRow(tableBody.length);
+        
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = kategoriak[i].id;
+        
+        var cell2 = row.insertCell(1);
+        cell2.innerHTML = kategoriak[i].nev;
+        cell2.style.fontWeight = "bold";
+        
+        var cell3 = row.insertCell(2);
+        cell3.className = "text-center";
+        cell3.innerHTML = '<button class="btn btn-warning btn-sm me-2" onClick="onEdit(' + i + ')">Szerkesztés</button>' +
+                          '<button class="btn btn-danger btn-sm" onClick="onDelete(' + i + ')">Törlés</button>';
+    }
 }
 
 function handleAction() {
-    const input = document.getElementById('kategoriaNev');
-    const msg = document.getElementById('validationMsg');
-    const button = document.getElementById('submitBtn');
-    
-    if (input.value.trim() === "") {
-        msg.classList.remove('d-none');
-        return;
-    }
-    msg.classList.add('d-none');
-
-    if (editIndex === -1) {
-        const ujId = kategoriak.length > 0 ? Math.max(...kategoriak.map(k => k.id)) + 1 : 1;
-        kategoriak.push({ id: ujId, nev: input.value.trim() });
-    } else {
-        kategoriak[editIndex].nev = input.value.trim();
-        editIndex = -1; 
-        button.innerText = "Hozzáadás"; 
-        button.style.backgroundColor = "#8e7e7e";
-    }
-
-    input.value = ""; 
-    renderTable(); 
-}
-
-function prepareEdit(index) {
-    const input = document.getElementById('kategoriaNev');
-    const button = document.getElementById('submitBtn');
-    
-    input.value = kategoriak[index].nev;
-    
-    editIndex = index;
-    button.innerText = "Módosítás mentése";
-    button.style.backgroundColor = "#5a4a4a"; 
-
-    input.focus();
-}
-
-function deleteKategoria(index) {
-    if (confirm("Biztosan törölni szeretné ezt a kategóriát?")) {
-        if (editIndex === index) {
-            editIndex = -1;
-            document.getElementById('kategoriaNev').value = "";
-            document.getElementById('submitBtn').innerText = "Hozzáadás";
+    if (validate()) {
+        var nevInput = document.getElementById("kategoriaNev").value;
+        
+        if (selectedIndex == null) { 
+            var ujId = kategoriak.length > 0 ? Math.max(...kategoriak.map(k => k.id)) + 1 : 1;
+            kategoriak.push({ id: ujId, nev: nevInput });
+        } else {
+            kategoriak[selectedIndex].nev = nevInput;
+            selectedIndex = null;
+            document.getElementById("submitBtn").innerText = "Hozzáadás";
+            document.getElementById("submitBtn").style.backgroundColor = "#8e7e7e";
         }
         
-        kategoriak.splice(index, 1);
-        renderTable();
+        resetForm();
+        printArray();
     }
+}
+
+function onEdit(index) {
+    selectedIndex = index;
+    document.getElementById("kategoriaNev").value = kategoriak[index].nev;
+    
+    var btn = document.getElementById("submitBtn");
+    btn.innerText = "Módosítás mentése";
+    btn.style.backgroundColor = "#5a4a4a";
+    
+    document.getElementById("kategoriaNev").focus();
+}
+
+function onDelete(index) {
+    if (confirm('Biztosan törölni szeretné ezt a kategóriát?')) {
+        kategoriak.splice(index, 1);
+        resetForm();
+        printArray();
+    }
+}
+ 
+function resetForm() {
+    document.getElementById("kategoriaNev").value = "";
+    document.getElementById("validationMsg").classList.add("d-none");
+    selectedIndex = null;
+}
+
+function validate() {
+    var isValid = true;
+    if (document.getElementById("kategoriaNev").value.trim() == "") {
+        isValid = false;
+        document.getElementById("validationMsg").classList.remove("d-none");
+    } else {
+        isValid = true;
+        document.getElementById("validationMsg").classList.add("d-none");
+    }
+    return isValid;
 }
