@@ -10,7 +10,7 @@ class AllatKartya {
         this.name = name;
         this.imageSrc = imageSrc;
 
-        // létrehozom a kártyát
+        // kártya
         this.container = document.createElement("div");
         this.container.className = "card";
 
